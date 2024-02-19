@@ -4,28 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@500&family=Ubuntu:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css"
 </head>
 <body>
-    <input type="file" id="inputfile" placeholder="place the csv or txt file here">
-    <button id='btn'>click me</button>
-    <p id = "output"></p>
-    <script type="text/javascript" src="res/read.js"></script>
-    <script type="text/javascript">
+    <section id="top">
+        <input type="file" id="inputfile" placeholder="place the csv or txt file here">
+        <button id='btn'>click me</button>
+        <p id = "output"></p>
+        <script type="text/javascript" src="res/read.js"></script>
+        <script type="text/javascript">
+    
+            var myButton = document.getElementById('btn');
+    
+            myButton.onclick = function(){
+    
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = "res/process.js"; 
+                document.getElementsByTagName("head")[0].appendChild(script);
+                return false;
+    
+            }
+    
+    
+        </script>
+    </section>
+    <section id="bottom">
 
-        var myButton = document.getElementById('btn');
+    </section>
 
-        myButton.onclick = function(){
-
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = "res/process.js"; 
-            document.getElementsByTagName("head")[0].appendChild(script);
-            return false;
-
-        }
-
-
-    </script>
 
 </body>
 </html>

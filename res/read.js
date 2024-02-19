@@ -1,7 +1,4 @@
 
-function makeArray(data){
-        console.log("schisch")
-}
 document.getElementById("inputfile").addEventListener("change", function(){
     let reader = new FileReader()
     reader.onload = function(){
