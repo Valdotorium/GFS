@@ -1,11 +1,20 @@
 #top{
     background-color: #9AD;
-    min-height: 20vh;
+    min-height: 10vh;
     align-content: center;
+}
+#center{
+    background-color: #DDE;
+    min-height: 60vh;
+    align-content: center;
+}
+#center div{
+    display: inline-block;
+    vertical-align: middle;
 }
 #bottom{
     background-color: #BBC;
-    min-height: 80vh;
+    min-height: 30vh;
 }
 html, body{
 
@@ -18,7 +27,6 @@ html, body{
     margin: 0%;
     padding: 0%;
     border-radius: 0%;
-    align-self: start;
 }
 p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     font-family: 'Mukta', sans-serif;
@@ -27,8 +35,32 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     font-size: 1.8vw;
     font-weight: 400;
 }
-#btn, #inputfile,button, input{
+#btn, #inputfile,button, input, h1, #logo{
     align-self: center;
     padding: 1vw;
     margin: 1vw;
+}
+#output{
+    display: none
+}
+#header{
+    margin:auto;
+    align-self: center;
+    align-content: center;
+    text-align: center;
+    border-bottom: 1vw solid #77B;
+}
+#header img,
+#header h1 {
+    display: inline-block;
+    vertical-align: middle;
+    
+}
+#logo{
+
+    display: inline;
+    margin-left: auto;
+    margin-right: auto;
+    width: 4%;
+
 }
