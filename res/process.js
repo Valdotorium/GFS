@@ -56,3 +56,41 @@ console.log("Found separating symbol in csv string: "+ separatingSymbol)
 let csvMatrix = readCSVstring(csvString)
 csvMatrix = convertCSVMatrix(csvMatrix)
 
+let FramesPerValue = 50 //number of frames per value in the matrix
+let FPS = 50 
+
+let CreateArrays = function (csvMatrix, FramesPerValue){
+    let c = 1
+    //colors of bars / lines in the chart
+    let Colors= [[200, 20, 20], [20,200,20], [20,20,200], [20,200,200], [200,200,20], [200,20,200]]
+    let DataObjects = []
+    //creating the data for all frames that will be animated
+    while (c < csvMatrix[c].length){
+        //every column has one data object
+        let DataObject = {}
+        DataObject.name = csvMatrix[0][c]
+        DataObject.color = Colors[c%6]
+        DataObject.values = []
+        cc = 1
+        while (cc < csvMatrix.length - 1){
+            let NextValue = csvMatrix[cc + 1][c]
+            let CurrentValue = csvMatrix[cc][c]
+            let ValueDifference = (NextValue - CurrentValue) / FramesPerValue
+            ccc = 0
+            while (ccc < FramesPerValue){
+                DataObject.values.push(CurrentValue + ValueDifference * ccc)
+                ccc += 1
+            }
+            cc += 1
+        }
+        DataObjects.push(DataObject)
+        c += 1 
+    }
+    console.log(DataObjects)
+
+
+}
+
+let AnimationDataObjects = CreateArrays(csvMatrix, FramesPerValue)
+
+// from here, create a animate bar chart and animate line graph function
