@@ -7,7 +7,10 @@ let findSeparatingSymbol = function(csvString){
     return Array.from(csvString)[0]
 
 }
-
+//fuction for waiting
+const sleep = (delay) => {
+    new Promise((resolve) => setTimeout(resolve, delay))
+}
 let readCSVstring = function (csvString){
     //splitting the csv string into an array of strings
     let csvMatrix = []
@@ -57,7 +60,7 @@ let csvMatrix = readCSVstring(csvString)
 csvMatrix = convertCSVMatrix(csvMatrix)
 
 let FramesPerValue = 50 //number of frames per value in the matrix
-let FPS = 50 
+let FPS = 2
 
 let CreateArrays = function (csvMatrix, FramesPerValue){
     let c = 1
@@ -90,7 +93,17 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
 
 
 }
+let AnimateData = async function (csvMatrix, FPS) {
+    let framesInTotal = csvMatrix.length
+    let waitMilliseconds = 1000 / FPS
+    let c = 0
+    while (c < framesInTotal){
+        await sleep(waitMilliseconds)
+        console.log(csvMatrix[c])
+        c++
+    }
 
+}
 let AnimationDataObjects = CreateArrays(csvMatrix, FramesPerValue)
-
+AnimateData(csvMatrix, FPS)
 // from here, create a animate bar chart and animate line graph function
