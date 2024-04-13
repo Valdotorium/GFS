@@ -8,7 +8,7 @@ let findSeparatingSymbol = function(csvString){
 
 }
 //fuction for waiting
-const sleep = (delay) => {
+let sleep = (delay) => {
     new Promise((resolve) => setTimeout(resolve, delay))
 }
 let readCSVstring = function (csvString){
@@ -60,7 +60,7 @@ let csvMatrix = readCSVstring(csvString)
 csvMatrix = convertCSVMatrix(csvMatrix)
 
 let FramesPerValue = 50 //number of frames per value in the matrix
-let FPS = 2
+let FPS = 40
 
 let CreateArrays = function (csvMatrix, FramesPerValue){
     let c = 1
@@ -90,20 +90,39 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
         c += 1 
     }
     console.log(DataObjects)
+    return DataObjects
 
 
 }
-let AnimateData = async function (csvMatrix, FPS) {
-    let framesInTotal = csvMatrix.length
+let AnimateData = async function (DataObjects, FPS) {
+    let framesInTotal = DataObjects[0].values.length
     let waitMilliseconds = 1000 / FPS
     let c = 0
-    while (c < framesInTotal){
-        await sleep(waitMilliseconds)
-        console.log(csvMatrix[c])
-        c++
+    let cc = 0
+    let CurrentFrameValues = []
+    var id = null
+    clearInterval(id);
+    id = setInterval(frame, waitMilliseconds);
+    function frame() {
+      if (c== framesInTotal) {
+        clearInterval(id);
+      } else {
+        c++; 
+        cc = 0
+        CurrentFrameValues = []
+        while (cc < DataObjects.length) {
+            CurrentFrameValues.push(DataObjects[cc].values[c])
+            
+            cc += 1
+        }
+        console.log("values for frame: ", c, ":",CurrentFrameValues)
+         
+      }
     }
 
 }
 let AnimationDataObjects = CreateArrays(csvMatrix, FramesPerValue)
-AnimateData(csvMatrix, FPS)
+AnimateData(AnimationDataObjects, FPS)
+console.log("create animation data objects:", AnimationDataObjects)
+document.getElementById("output").innerText = AnimationDataObjects
 // from here, create a animate bar chart and animate line graph function
