@@ -59,6 +59,8 @@ console.log("Found separating symbol in csv string: "+ separatingSymbol)
 let csvMatrix = readCSVstring(csvString)
 csvMatrix = convertCSVMatrix(csvMatrix)
 
+//creating the data for all frames that will be animated
+
 let FramesPerValue = 50 //number of frames per value in the matrix
 let FPS = 40
 
@@ -91,8 +93,23 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
     }
     console.log(DataObjects)
     return DataObjects
+}
 
-
+let LayoutData = {}
+let Layout = function(Layout, DataObjects){
+    //size of the browser window
+    Layout.windowWidth = window.innerWidth
+    Layout.windowHeight = window.innerHeight
+    console.log("browser window width:",Layout.windowWidth)
+    console.log("browser window height:",Layout.windowHeight)
+    //spacing and distribution of bars on the x axis
+    Layout.barGap = 10
+    Layout.barCount = DataObjects.length - 1
+    Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / Layout.barCount
+    Layout.barDisplayDistance = Layout.barWidth + Layout.barGap
+    console.log("got ", Layout.barCount, " bars distributed on ", Layout.windowHeight, " y pixels.", "bar width:", Layout.barWidth, " bar spacing:", Layout.barGap)
+    
+    return Layout
 }
 let AnimateData = async function (DataObjects, FPS) {
     let framesInTotal = DataObjects[0].values.length
@@ -121,8 +138,11 @@ let AnimateData = async function (DataObjects, FPS) {
     }
 
 }
+
 let AnimationDataObjects = CreateArrays(csvMatrix, FramesPerValue)
+LayoutData = Layout(LayoutData, AnimationDataObjects)
 AnimateData(AnimationDataObjects, FPS)
 console.log("create animation data objects:", AnimationDataObjects)
 document.getElementById("output").innerText = AnimationDataObjects
+
 // from here, create a animate bar chart and animate line graph function
