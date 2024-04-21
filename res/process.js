@@ -111,7 +111,7 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     //spacing and distribution of bars on the x axis
     Layout.barGap = 10
     Layout.barCount = DataObjects.length - 1
-    Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / Layout.barCount
+    Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / parseInt(Layout.barCount * 1.5)
     Layout.barDisplayDistance = Layout.barWidth + Layout.barGap
     
     console.log("got ", Layout.barCount, " bars distributed on ", Layout.windowHeight, " y pixels.", "bar width:", Layout.barWidth, " bar spacing:", Layout.barGap)
@@ -126,7 +126,7 @@ let createCanvas = function(Layout){
     document.getElementById("center").appendChild(canvas)
 }
 
-let AnimateData = async function (DataObjects, FPS) {
+let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
     let framesInTotal = DataObjects[0].values.length
     //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
@@ -135,6 +135,8 @@ let AnimateData = async function (DataObjects, FPS) {
     let cc = 0
     let CurrentFrameValues = []
     var id = null
+    const barHeight = Layout.barWidth
+    const barGap = Layout.barGap
     clearInterval(id);
     id = setInterval(frame, waitMilliseconds);
     function frame() {
@@ -146,11 +148,30 @@ let AnimateData = async function (DataObjects, FPS) {
         CurrentFrameValues = []
         while (cc < DataObjects.length) {
             CurrentFrameValues.push(DataObjects[cc].values[c])
-            //animate on the cancas here
+
             
             cc += 1
         }
         console.log("values for frame: ", c, ":",CurrentFrameValues)
+        cc = 0
+        //clearing the canvas
+        ctx.fillStyle = "white"
+        ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
+        max = Math.max.apply(null, CurrentFrameValues)
+        while (cc<CurrentFrameValues.length){
+            //animate on the cancas here
+            //y pos of the bar
+            barStartY = barGap + cc * barHeight+ cc * barGap
+            barStartX = 0 
+            
+            barEndX = CurrentFrameValues[cc] / max
+            barEndX = barEndX * Layout.windowWidth
+            //fill a rect on the canvas
+            ctx.fillStyle = "red"
+            ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
+            cc += 1
+
+        }
          
       }
     }
@@ -163,6 +184,6 @@ LayoutData = Layout(LayoutData, AnimationDataObjects, canvasSize)
 //adding a canvas to the page
 createCanvas(LayoutData)
 //animating the values for every frame
-AnimateData(AnimationDataObjects, FPS)
+AnimateData(AnimationDataObjects, FPS, LayoutData, document.getElementById("canvas"), document.getElementById("canvas").getContext("2d"))
 console.log("create animation data objects:", AnimationDataObjects)
 
