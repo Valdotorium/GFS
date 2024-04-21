@@ -5,7 +5,7 @@
 }
 #center{
     background-color: #DDE;
-    min-height: 60vh;
+    min-height: 80vh;
     align-content: center;
 }
 #center div{
@@ -63,4 +63,12 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     margin-right: auto;
     width: 4%;
 
+}
+#canvas{
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border: 5px inset #CCD ;
 }

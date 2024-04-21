@@ -78,6 +78,11 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
         DataObject.values = []
         cc = 1
         while (cc < csvMatrix.length - 1){
+            //calculating the values for every frame
+            //example:
+            //if 1 column of the table occupies one second in a animation with 60 FPS,
+            //60 values need to be calculated for a smooth animation
+            //these arrays store values for every frame of the animation.
             let NextValue = csvMatrix[cc + 1][c]
             let CurrentValue = csvMatrix[cc][c]
             let ValueDifference = (NextValue - CurrentValue) / FramesPerValue
@@ -96,10 +101,11 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
 }
 
 let LayoutData = {}
-let Layout = function(Layout, DataObjects){
+let canvasSize = [0.6,0.6]
+let Layout = function(Layout, DataObjects, animationCanvasSize){
     //size of the browser window
-    Layout.windowWidth = window.innerWidth
-    Layout.windowHeight = window.innerHeight
+    Layout.windowWidth = window.innerWidth * animationCanvasSize[0]
+    Layout.windowHeight = window.innerHeight * animationCanvasSize[1]
     console.log("browser window width:",Layout.windowWidth)
     console.log("browser window height:",Layout.windowHeight)
     //spacing and distribution of bars on the x axis
@@ -107,13 +113,24 @@ let Layout = function(Layout, DataObjects){
     Layout.barCount = DataObjects.length - 1
     Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / Layout.barCount
     Layout.barDisplayDistance = Layout.barWidth + Layout.barGap
+    
     console.log("got ", Layout.barCount, " bars distributed on ", Layout.windowHeight, " y pixels.", "bar width:", Layout.barWidth, " bar spacing:", Layout.barGap)
     
     return Layout
 }
+let createCanvas = function(Layout){
+    let canvas = document.createElement("canvas")
+    canvas.width = Layout.windowWidth
+    canvas.height = Layout.windowHeight
+    canvas.id = "canvas"
+    document.getElementById("center").appendChild(canvas)
+}
+
 let AnimateData = async function (DataObjects, FPS) {
     let framesInTotal = DataObjects[0].values.length
+    //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
+    let canvas = null
     let c = 0
     let cc = 0
     let CurrentFrameValues = []
@@ -124,11 +141,12 @@ let AnimateData = async function (DataObjects, FPS) {
       if (c== framesInTotal) {
         clearInterval(id);
       } else {
-        c++; 
+        c++
         cc = 0
         CurrentFrameValues = []
         while (cc < DataObjects.length) {
             CurrentFrameValues.push(DataObjects[cc].values[c])
+            //animate on the cancas here
             
             cc += 1
         }
@@ -138,11 +156,13 @@ let AnimateData = async function (DataObjects, FPS) {
     }
 
 }
-
+//reading the bcsv matrix in a different way
 let AnimationDataObjects = CreateArrays(csvMatrix, FramesPerValue)
-LayoutData = Layout(LayoutData, AnimationDataObjects)
+//creating a layout
+LayoutData = Layout(LayoutData, AnimationDataObjects, canvasSize)
+//adding a canvas to the page
+createCanvas(LayoutData)
+//animating the values for every frame
 AnimateData(AnimationDataObjects, FPS)
 console.log("create animation data objects:", AnimationDataObjects)
-document.getElementById("output").innerText = AnimationDataObjects
 
-// from here, create a animate bar chart and animate line graph function
