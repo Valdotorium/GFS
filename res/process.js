@@ -62,7 +62,7 @@ csvMatrix = convertCSVMatrix(csvMatrix)
 
 //creating the data for all frames that will be animated
 
-let FramesPerValue = 50 //number of frames per value in the matrix
+let FramesPerValue = 80 //number of frames per value in the matrix
 let FPS = 40
 
 let CreateArrays = function (csvMatrix, FramesPerValue){
@@ -74,7 +74,7 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
     while (c < csvMatrix[c].length){
         //every column has one data object
         let DataObject = {}
-        DataObject.name = csvMatrix[0][c]
+        DataObject.name = csvMatrix[0][c+1] //because
         DataObject.color = Colors[c%6]
         DataObject.values = []
         cc = 0
@@ -174,9 +174,10 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
             ctx.fillStyle = DataObjects[cc].color
             ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
             ctx.fillStyle = "black"
-            ctx.font = "20px Arial"
+            ctx.font = "2vh Arial"
             
-            ctx.fillText(CurrentFrameValues[cc].toFixed(1), barEndX, barStartY + barHeight / 2)
+            ctx.fillText(CurrentFrameValues[cc].toFixed(1), barEndX, barStartY + barHeight / 3)
+            ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
             cc += 1
 
         }
