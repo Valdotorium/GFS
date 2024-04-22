@@ -1,6 +1,7 @@
 
 let findSeparatingSymbol = function(csvString){
     //c is used as counter
+    console.log("loaded csv string:", csvString)
     let c = 0
     let foundSeparatingSymbol = false
     console.log(Array.from(csvString)[0])
@@ -15,7 +16,7 @@ let readCSVstring = function (csvString){
     //splitting the csv string into an array of strings
     let csvMatrix = []
     //reading the csv string
-    let csvArray = csvString.split("\n")
+    let csvArray = csvString.split("§")
     //seperating the lines
     console.log("Array split in lines: ",csvArray)
     for (let i = 0; i < csvArray.length; i++) {
@@ -76,7 +77,7 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
         DataObject.name = csvMatrix[0][c]
         DataObject.color = Colors[c%6]
         DataObject.values = []
-        cc = 1
+        cc = 0
         while (cc < csvMatrix.length - 1){
             //calculating the values for every frame
             //example:
@@ -112,6 +113,9 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     Layout.barGap = 10
     Layout.barCount = DataObjects.length - 1
     Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / parseInt(Layout.barCount * 1.5)
+    if (Layout.barWidth > 80){
+        Layout.barWidth = 80
+    }
     Layout.barDisplayDistance = Layout.barWidth + Layout.barGap
     
     console.log("got ", Layout.barCount, " bars distributed on ", Layout.windowHeight, " y pixels.", "bar width:", Layout.barWidth, " bar spacing:", Layout.barGap)
@@ -127,7 +131,7 @@ let createCanvas = function(Layout){
 }
 
 let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
-    let framesInTotal = DataObjects[0].values.length
+    let framesInTotal = DataObjects[0].values.length - 1
     //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
     let canvas = null
@@ -140,7 +144,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
     clearInterval(id);
     id = setInterval(frame, waitMilliseconds);
     function frame() {
-      if (c== framesInTotal) {
+      if (c>= framesInTotal) {
         clearInterval(id);
       } else {
         c++
@@ -165,10 +169,14 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
             barStartX = 0 
             
             barEndX = CurrentFrameValues[cc] / max
-            barEndX = barEndX * Layout.windowWidth
+            barEndX = barEndX * Layout.windowWidth * 0.8
             //fill a rect on the canvas
             ctx.fillStyle = "red"
             ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
+            ctx.fillStyle = "black"
+            ctx.font = "20px Arial"
+            
+            ctx.fillText(CurrentFrameValues[cc].toFixed(1), barEndX, barStartY + barHeight / 2)
             cc += 1
 
         }
