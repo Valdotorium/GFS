@@ -68,7 +68,7 @@ let FPS = 40
 let CreateArrays = function (csvMatrix, FramesPerValue){
     let c = 1
     //colors of bars / lines in the chart
-    let Colors= [[200, 20, 20], [20,200,20], [20,20,200], [20,200,200], [200,200,20], [200,20,200]]
+    let Colors= ["#BB4444", "#44BB44", "#4444BB", "#BBBB44", "#44BBBB", "#BB44BB"]
     let DataObjects = []
     //creating the data for all frames that will be animated
     while (c < csvMatrix[c].length){
@@ -171,7 +171,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
             barEndX = CurrentFrameValues[cc] / max
             barEndX = barEndX * Layout.windowWidth * 0.8
             //fill a rect on the canvas
-            ctx.fillStyle = "red"
+            ctx.fillStyle = DataObjects[cc].color
             ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
             ctx.fillStyle = "black"
             ctx.font = "20px Arial"
