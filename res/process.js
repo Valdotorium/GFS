@@ -16,7 +16,7 @@ let readCSVstring = function (csvString){
     //splitting the csv string into an array of strings
     let csvMatrix = []
     //reading the csv string
-    let csvArray = csvString.split("§")
+    let csvArray = csvString.split(/\r?\n|\r|\n/g)
     //seperating the lines
     console.log("Array split in lines: ",csvArray)
     for (let i = 0; i < csvArray.length; i++) {
@@ -127,7 +127,7 @@ let createCanvas = function(Layout){
     canvas.width = Layout.windowWidth
     canvas.height = Layout.windowHeight
     canvas.id = "canvas"
-    document.getElementById("center").appendChild(canvas)
+    document.getElementById("animation_placeholder").appendChild(canvas)
 }
 
 let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {

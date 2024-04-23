@@ -9,6 +9,7 @@ document.getElementById("inputfile").addEventListener("change", function(){
         console.log("reader onload")
         document.getElementById("output").innerText = reader.result
         csvString = reader.result
+        console.log("loaded csv string: ",csvString)
         }
     reader.readAsText(document.getElementById("inputfile").files[0])
 
