@@ -32,13 +32,24 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     font-family: 'Mukta', sans-serif;
     font-family: 'Ubuntu', sans-serif;
     background-color: inherit;
-    font-size: 1.8vw;
+    font-size: 1.6vmax;
     font-weight: 400;
 }
-#btn, #inputfile,button, input, h1, #logo{
+#btn, #inputfile,button, h1, #logo{
     align-self: center;
-    padding: 1vw;
-    margin: 1vw;
+    font-family: 'Mukta', sans-serif;
+    font-family: 'Ubuntu', sans-serif;
+    padding: 1vmin;
+    margin: 1vmin;
+    size: 4vmax;
+    font-size: 1.6vmax;
+    font-weight: 400;
+}
+.slider{
+    margin: none;
+    min-width: 100px;
+    max-width: 300px;
+    width: 8vmax
 }
 #output{
     display: block;

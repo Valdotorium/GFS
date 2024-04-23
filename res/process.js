@@ -63,7 +63,9 @@ csvMatrix = convertCSVMatrix(csvMatrix)
 //creating the data for all frames that will be animated
 
 let FramesPerValue = 80 //number of frames per value in the matrix
-let FPS = 40
+let FPS = 30
+let duration = document.getElementById("duration_slider").value
+FramesPerValue = parseInt((FPS * duration) / csvMatrix.length)
 
 let CreateArrays = function (csvMatrix, FramesPerValue){
     let c = 1
@@ -71,7 +73,8 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
     let Colors= ["#BB4444", "#44BB44", "#4444BB", "#BBBB44", "#44BBBB", "#BB44BB"]
     let DataObjects = []
     //creating the data for all frames that will be animated
-    while (c < csvMatrix[c].length){
+
+    while (c < csvMatrix[1].length){
         //every column has one data object
         let DataObject = {}
         DataObject.name = csvMatrix[0][c+1] //because
@@ -108,7 +111,6 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
     console.log(DataObjects)
     return DataObjects
 }
-
 let LayoutData = {}
 let canvasSize = [0.6,0.6]
 let Layout = function(Layout, DataObjects, animationCanvasSize){
@@ -143,63 +145,103 @@ let createCanvas = function(Layout){
 }
 
 let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) {
-    let framesInTotal = DataObjects[0].values.length - 1
+    let graphType = "bars"
+    let framesInTotal = DataObjects[0].values.length
     //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
     let canvas = null
-    let c = 0
-    let cc = 0
-    let CurrentFrameValues = []
-    var id = null
-    const barHeight = Layout.barWidth
-    const barGap = Layout.barGap
-    clearInterval(id);
-    id = setInterval(frame, waitMilliseconds);
-    function frame() {
-      if (c>= framesInTotal) {
+    if (graphType == "bars"){
+        let drawNamesOnYAxis = document.getElementById("values_position_checkbox").checked
+
+        let c = 0
+        let cc = 0
+        let CurrentFrameValues = []
+        var id = null
+        const barHeight = Layout.barWidth
+        const barGap = Layout.barGap
         clearInterval(id);
-      } else {
-        c++
-        cc = 0
-        let CurrentRow = ""
-        CurrentFrameValues = []
-        while (cc < DataObjects.length) {
-            CurrentFrameValues.push(DataObjects[cc].values[c])
-            CurrentRow = DataObjects[cc].rowNames[c]
+        id = setInterval(frame, waitMilliseconds);
+        function frame() {
+          if (c>= framesInTotal -1) {
+            clearInterval(id);
+          } else {
+            c++
+            cc = 0
+            let CurrentRow = ""
+            CurrentFrameValues = []
+            while (cc < DataObjects.length) {
+                CurrentFrameValues.push(DataObjects[cc].values[c])
+                CurrentRow = DataObjects[cc].rowNames[c]
+    
+                
+                cc += 1
+            }
+            console.log("values for frame: ", c, ":",CurrentFrameValues)
+            cc = 0
+            //clearing the canvas
+            ctx.fillStyle = "white"
+            document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
+            console.log(title)
+            ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
+            max = Math.max.apply(null, CurrentFrameValues)
+            while (cc<CurrentFrameValues.length){
+                //animate on the cancas here
+                //y pos of the bar
+                barStartY = barGap + cc * barHeight+ cc * barGap
 
-            
-            cc += 1
-        }
-        console.log("values for frame: ", c, ":",CurrentFrameValues)
-        cc = 0
-        //clearing the canvas
-        ctx.fillStyle = "white"
-        document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
-        console.log(title)
-        ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
-        max = Math.max.apply(null, CurrentFrameValues)
-        while (cc<CurrentFrameValues.length){
-            //animate on the cancas here
-            //y pos of the bar
-            barStartY = barGap + cc * barHeight+ cc * barGap
-            barStartX = 0 
-            
-            barEndX = CurrentFrameValues[cc] / max
-            barEndX = barEndX * Layout.windowWidth * 0.8
-            //fill a rect on the canvas
-            ctx.fillStyle = DataObjects[cc].color
-            ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
-            ctx.fillStyle = "black"
-            ctx.font = "2vh Arial"
-            
-            ctx.fillText(CurrentFrameValues[cc].toFixed(1), barEndX, barStartY + barHeight / 3)
-            ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
-            cc += 1
+                if(drawNamesOnYAxis){
+                    // Define a new path
+                    ctx.beginPath()
+                    ctx.fillStyle = "#111111"
+                    // Set a start-point
+                    ctx.moveTo(Layout.windowWidth * 0.2, barGap)
 
+                    // Set an end-point
+                    ctx.lineTo(Layout.windowWidth * 0.2, Layout.windowHeight - barGap)
+                    // Stroke it (Do the Drawing)
+                    ctx.stroke()
+                    //draw a line at x = cx * 0.2 and the bars from cx * 0.2 to cx * 0.8
+                    barStartX = Layout.windowWidth * 0.2
+                
+                    barEndX = CurrentFrameValues[cc] / max
+                    barEndX = barEndX * Layout.windowWidth * 0.7 +Layout.windowWidth * 0.2
+                    //fill a rect on the canvas
+                    ctx.fillStyle = DataObjects[cc].color
+                    ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
+                    ctx.fillStyle = "black"
+                    ctx.font = "2vh Arial"
+                    
+                    ctx.fillText(CurrentFrameValues[cc].toFixed(1), Layout.windowWidth * 0.205,barStartY + barHeight / 2)
+                    ctx.fillText(DataObjects[cc].name, Layout.windowWidth * 0.012, barStartY + barHeight / 2)
+                    cc += 1  
+                }else{
+                    //draw bars over the canvas from x = 0
+                    barStartX = 0 
+                
+                    barEndX = CurrentFrameValues[cc] / max
+                    barEndX = barEndX * Layout.windowWidth * 0.8
+                    //fill a rect on the canvas
+                    ctx.fillStyle = DataObjects[cc].color
+                    ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
+                    ctx.fillStyle = "black"
+                    ctx.font = "2vh Arial"
+                    
+                    ctx.fillText(CurrentFrameValues[cc].toFixed(1), barEndX, barStartY + barHeight / 3)
+                    ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
+                    cc += 1  
+                }
+
+    
+            }
+             
+          }
         }
-         
-      }
     }
+    if(graphType == "lines"){
+
+    }
+
+    
 
 }
 //reading the bcsv matrix in a different way
