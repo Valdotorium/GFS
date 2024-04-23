@@ -126,6 +126,7 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     if (Layout.barWidth > 80){
         Layout.barWidth = 80
     }
+    //how far the bars are apart
     Layout.barDisplayDistance = Layout.barWidth + Layout.barGap
     
     console.log("got ", Layout.barCount, " bars distributed on ", Layout.windowHeight, " y pixels.", "bar width:", Layout.barWidth, " bar spacing:", Layout.barGap)
@@ -140,6 +141,7 @@ let createCanvas = function(Layout){
     canvas.width = Layout.windowWidth
     canvas.height = Layout.windowHeight
     canvas.id = "canvas"
+    //creating the heading and canvas elements of the animation
     document.getElementById("animation_placeholder").appendChild(text)
     document.getElementById("animation_placeholder").appendChild(canvas)
 }
@@ -167,6 +169,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
           } else {
             c++
             cc = 0
+            //extracting the values for the current frame out of each data object and storing them in a list
             let CurrentRow = ""
             CurrentFrameValues = []
             while (cc < DataObjects.length) {
