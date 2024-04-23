@@ -133,6 +133,27 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     
     return Layout
 }
+let scaleValue = function(value){
+    //adjusting the number of decimal points of a number
+    if (value == 0){
+        value = value.toFixed(1)
+    }
+    else if(value < 0.2){
+        value = value.toFixed(3)
+    }
+    else if(value < 2){
+        value = value.toFixed(2)
+    }
+    else if(value < 20){
+        value = value.toFixed(1)
+    }
+    else{
+        value = value.toFixed(0)
+    }
+
+
+    return value
+}
 let createCanvas = function(Layout){
     let text = document.createElement("p")
     text.id = "chart_text"
@@ -214,7 +235,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     ctx.fillStyle = "black"
                     ctx.font = "2vh Arial"
                     
-                    ctx.fillText(CurrentFrameValues[cc].toFixed(1), Layout.windowWidth * 0.205,barStartY + barHeight / 2)
+                    ctx.fillText(scaleValue(CurrentFrameValues[cc]), Layout.windowWidth * 0.205,barStartY + barHeight / 2)
                     ctx.fillText(DataObjects[cc].name, Layout.windowWidth * 0.012, barStartY + barHeight / 2)
                     cc += 1  
                 }else{
@@ -229,8 +250,8 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     ctx.fillStyle = "black"
                     ctx.font = "2vh Arial"
                     
-                    ctx.fillText(CurrentFrameValues[cc].toFixed(1), barEndX, barStartY + barHeight / 3)
-                    ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
+                    ctx.fillText(scaleValue(CurrentFrameValues[cc]), barEndX, barStartY + barHeight / 3)
+                    ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight)
                     cc += 1  
                 }
 
