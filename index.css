@@ -61,3 +61,8 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     display: block;
     border: 5px inset #CCD ;
 }
+#chart_text{
+    width: 70vw;
+    margin-left: 20vw;
+    font-size : 3.5vw
+}

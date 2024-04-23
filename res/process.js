@@ -77,6 +77,7 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
         DataObject.name = csvMatrix[0][c+1] //because
         DataObject.color = Colors[c%6]
         DataObject.values = []
+        DataObject.rowNames = []
         cc = 0
         while (cc < csvMatrix.length - 1){
             //calculating the values for every frame
@@ -86,10 +87,17 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
             //these arrays store values for every frame of the animation.
             let NextValue = csvMatrix[cc + 1][c]
             let CurrentValue = csvMatrix[cc][c]
+            if(typeof CurrentValue != "number"){
+                CurrentValue = 0
+            }
+            if(typeof NextValue != "number"){
+                NextValue = 0
+            }
             let ValueDifference = (NextValue - CurrentValue) / FramesPerValue
             ccc = 0
             while (ccc < FramesPerValue){
                 DataObject.values.push(CurrentValue + ValueDifference * ccc)
+                DataObject.rowNames.push(csvMatrix[cc+1][0])
                 ccc += 1
             }
             cc += 1
@@ -123,14 +131,18 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     return Layout
 }
 let createCanvas = function(Layout){
+    let text = document.createElement("p")
+    text.id = "chart_text"
+    text.width = Layout.windowWidth
     let canvas = document.createElement("canvas")
     canvas.width = Layout.windowWidth
     canvas.height = Layout.windowHeight
     canvas.id = "canvas"
+    document.getElementById("animation_placeholder").appendChild(text)
     document.getElementById("animation_placeholder").appendChild(canvas)
 }
 
-let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
+let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) {
     let framesInTotal = DataObjects[0].values.length - 1
     //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
@@ -149,9 +161,11 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
       } else {
         c++
         cc = 0
+        let CurrentRow = ""
         CurrentFrameValues = []
         while (cc < DataObjects.length) {
             CurrentFrameValues.push(DataObjects[cc].values[c])
+            CurrentRow = DataObjects[cc].rowNames[c]
 
             
             cc += 1
@@ -160,6 +174,8 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx) {
         cc = 0
         //clearing the canvas
         ctx.fillStyle = "white"
+        document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
+        console.log(title)
         ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
         max = Math.max.apply(null, CurrentFrameValues)
         while (cc<CurrentFrameValues.length){
@@ -193,6 +209,6 @@ LayoutData = Layout(LayoutData, AnimationDataObjects, canvasSize)
 //adding a canvas to the page
 createCanvas(LayoutData)
 //animating the values for every frame
-AnimateData(AnimationDataObjects, FPS, LayoutData, document.getElementById("canvas"), document.getElementById("canvas").getContext("2d"))
+AnimateData(AnimationDataObjects, FPS, LayoutData, document.getElementById("canvas"), document.getElementById("canvas").getContext("2d"), csvMatrix[0][1])
 console.log("create animation data objects:", AnimationDataObjects)
 
