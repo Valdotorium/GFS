@@ -46,25 +46,12 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
 
 }
 #header{
-    margin:auto;
-    align-self: center;
-    align-content: center;
-    text-align: center;
-    border-bottom: 1vw solid #77B;
+    display: block;
+    align-items: center;
 }
-#header img,
 #header h1 {
     display: inline-block;
-    vertical-align: middle;
     
-}
-#logo{
-
-    display: inline;
-    margin-left: auto;
-    margin-right: auto;
-    width: 4%;
-
 }
 #canvas{
     padding-left: 0;

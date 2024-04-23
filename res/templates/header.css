@@ -1,0 +1,19 @@
+#contents{
+    margin-left: 10vw;
+    margin-right: 10vw;
+    min-width: 80vw;
+    display: inline-block;
+    text-align: center;
+    border-bottom: 1.25vmax solid #6868ac;
+}
+#logo{
+   width: 6vmax;
+   margin: auto;
+   display: inline-block;
+}
+#contents #text{
+    font-size: 2vmax;
+    margin: auto;	
+    padding: none;
+    display: inline-block;
+}
