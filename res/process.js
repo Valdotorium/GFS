@@ -133,15 +133,6 @@ let scaleValue = function(value){
     return value
 }
 
-let linegraphRange = function(StartItem, EndItem){
-    EndItem++
-    Xnodes = EndItem - StartItem - 1
-    if(EndItem - StartItem >= 13*FPS-1){
-        StartItem++
-    }
-    return StartItem, EndItem, Xnodes
-}
-
 let getMaximumFrameValue = function(values){
     let max = 0
     for (let i = 0; i < values.length; i++) {
@@ -152,9 +143,9 @@ let getMaximumFrameValue = function(values){
     return max
 }
 
-let drawBar= function(ctx, barStartX, barStartY,barHeight){
+let drawBar= function(ctx, barStartX, barStartY,barEndX,barHeight, color){
     //drawing a rect (the bars) for the bar chart
-    ctx.fillStyle = DataObjects[cc].color
+    ctx.fillStyle = color
     ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
     ctx.fillStyle = "black"
     ctx.font = "2vh Arial"
@@ -236,7 +227,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     barEndX = CurrentFrameValues[cc] / max
                     barEndX = barEndX * Layout.windowWidth * 0.7 +Layout.windowWidth * 0.2
                     //fill a rect on the canvas
-                    drawBar(ctx, barStartX, barEndX, barHeight)
+                    drawBar(ctx, barStartX,  barStartY,barEndX, barHeight, DataObjects[cc].color)
                     //displaying name and value of the data object
                     ctx.fillText(scaleValue(CurrentFrameValues[cc]), Layout.windowWidth * 0.205,barStartY + barHeight / 2)
                     ctx.fillText(DataObjects[cc].name, Layout.windowWidth * 0.012, barStartY + barHeight / 2)
@@ -247,7 +238,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     barEndX = CurrentFrameValues[cc] / max
                     barEndX = barEndX * Layout.windowWidth * 0.8
                     //fill a rect on the canvas
-                    drawBar(ctx, barStartX, barEndX, barHeight)
+                    drawBar(ctx, barStartX, barStartY,barEndX, barHeight,DataObjects[cc].color)
                     //displaying name and value of the data object
                     ctx.fillText(scaleValue(CurrentFrameValues[cc]), barEndX, barStartY + barHeight / 3)
                     ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
@@ -260,7 +251,6 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
     if(graphType == "lines"){
         //a line graph for the latest 15 seconds of the animation (FPS * 5) frames
         //creating dataobjects.length lists that store 5 * FPS values
-        fiveSecondsInFrames = 5 * FPS
         let c = 0
         let StartItem = 0
         let EndItem = 1
@@ -274,7 +264,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
         let CurrentValueY = 0
         let NextValueY = 0
         let CurrentRow = ""
-        let Xnodes = 0
+        let Xnodes = 1
         let spacingXnodes = 0
         clearInterval(id);
         id = setInterval(frame, waitMilliseconds);
@@ -283,7 +273,11 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
             clearInterval(id);
           } else {
             //function to limit the number of lines per data object below FPS*13
-            StartItem, EndItem, Xnodes = linegraphRange(StartItem, EndItem)
+            EndItem++
+            Xnodes = EndItem - StartItem - 1
+            if(EndItem - StartItem >= 13*FPS-1){
+                StartItem++
+            }
             //the spacing between every line start and end point on the x axis
             spacingXnodes = Layout.windowWidth / Xnodes
             CurrentRow = DataObjects[0].rowNames[EndItem]
@@ -328,14 +322,14 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 ctx.fillStyle = "black"
                 ctx.font = "1.3vh Arial"
                 ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
-                ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + barGap)
-                cc += 1  
+                ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + barGap) 
                 c++
             }
           }
         }
-    }
-}
+      }
+  }
+
 //--------------------------------------------PROGRAM----------------------------------------
 //LOADING
 //storing the csv file as string
