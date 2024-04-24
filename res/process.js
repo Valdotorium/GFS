@@ -12,6 +12,7 @@ let findSeparatingSymbol = function(csvString){
 let sleep = (delay) => {
     new Promise((resolve) => setTimeout(resolve, delay))
 }
+
 let readCSVstring = function (csvString){
     //splitting the csv string into an array of strings
     let csvMatrix = []
@@ -22,7 +23,6 @@ let readCSVstring = function (csvString){
     for (let i = 0; i < csvArray.length; i++) {
         //separating the columns
         csvArray[i] = csvArray[i].split(separatingSymbol)
-
         csvMatrix.push(csvArray[i])
         }
     //console.log(csvMatrix)
@@ -48,20 +48,16 @@ let convertCSVMatrix = function (csvMatrix) {
     return csvMatrix
     }
 
-
-
-
 let CreateArrays = function (csvMatrix, FramesPerValue){
     let c = 1
     //colors of bars / lines in the chart
     let Colors= ["#BB4444", "#44BB44", "#4444BB", "#BBBB44", "#44BBBB", "#BB44BB"]
     let DataObjects = []
     //creating the data for all frames that will be animated
-
     while (c < csvMatrix[1].length){
         //every column has one data object
         let DataObject = {}
-        DataObject.name = csvMatrix[0][c+1] //because
+        DataObject.name = csvMatrix[0][c+1] //because of the separating symbol
         DataObject.color = Colors[c%6]
         DataObject.values = []
         DataObject.rowNames = []
@@ -95,8 +91,7 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
     console.log(DataObjects)
     return DataObjects
 }
-let LayoutData = {}
-let canvasSize = [0.6,0.6]
+
 let Layout = function(Layout, DataObjects, animationCanvasSize){
     //size of the browser window
     Layout.windowWidth = window.innerWidth * animationCanvasSize[0]
@@ -117,58 +112,86 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     
     return Layout
 }
+
 let scaleValue = function(value){
     //adjusting the number of decimal points of a number
     if (value == 0){
         value = value.toFixed(1)
     }
-    else if(value < 0.2){
+    else if(value < 1){
         value = value.toFixed(3)
     }
-    else if(value < 2){
+    else if(value < 10){
         value = value.toFixed(2)
     }
-    else if(value < 20){
+    else if(value < 100){
         value = value.toFixed(1)
     }
     else{
         value = value.toFixed(0)
     }
-
-
     return value
 }
+
+let linegraphRange = function(StartItem, EndItem){
+    EndItem++
+    Xnodes = EndItem - StartItem - 1
+    if(EndItem - StartItem >= 13*FPS-1){
+        StartItem++
+    }
+    return StartItem, EndItem, Xnodes
+}
+
+let getMaximumFrameValue = function(values){
+    let max = 0
+    for (let i = 0; i < values.length; i++) {
+        if (values[i] > max){
+            max = values[i]
+        }
+    }
+    return max
+}
+
+let drawBar= function(ctx, barStartX, barStartY,barHeight){
+    //drawing a rect (the bars) for the bar chart
+    ctx.fillStyle = DataObjects[cc].color
+    ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
+    ctx.fillStyle = "black"
+    ctx.font = "2vh Arial"
+}
+
 let createCanvas = function(Layout){
+    //animation "header"
     let text = document.createElement("p")
     text.id = "chart_text"
     text.width = Layout.windowWidth
+    document.getElementById("animation_placeholder").appendChild(text)
+    //animation canvas
     let canvas = document.createElement("canvas")
     canvas.width = Layout.windowWidth
     canvas.height = Layout.windowHeight
     canvas.id = "canvas"
-    //creating the heading and canvas elements of the animation
-    document.getElementById("animation_placeholder").appendChild(text)
     document.getElementById("animation_placeholder").appendChild(canvas)
 }
 
 let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) {
+    //checking the status of the make line graph checkbox
     let graphType = "bars"
     if (document.getElementById("line_graph_checkbox").checked){
-        graphType = "lines5s"
+        graphType = "lines"
     } else{
         graphType = "bars"
     }
-
     let framesInTotal = DataObjects[0].values.length
     //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
     let canvas = null
     if (graphType == "bars"){
         let drawNamesOnYAxis = document.getElementById("values_position_checkbox").checked
-
         let c = 0
         let cc = 0
         let CurrentFrameValues = []
+        let CurrentRow = ""
         var id = null
         const barHeight = Layout.barWidth
         const barGap = Layout.barGap
@@ -181,79 +204,61 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
             c++
             cc = 0
             //extracting the values for the current frame out of each data object and storing them in a list
-            let CurrentRow = ""
             CurrentFrameValues = []
             while (cc < DataObjects.length) {
                 CurrentFrameValues.push(DataObjects[cc].values[c])
                 CurrentRow = DataObjects[cc].rowNames[c]
-    
-                
                 cc += 1
             }
-            console.log("values for frame: ", c, ":",CurrentFrameValues)
             cc = 0
+            //the "header"
+            document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
             //clearing the canvas
             ctx.fillStyle = "white"
-            document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
-            console.log(title)
             ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
-            max = Math.max.apply(null, CurrentFrameValues)
+            max = getMaximumFrameValue(CurrentFrameValues)
             while (cc<CurrentFrameValues.length){
                 //animate on the cancas here
                 //y pos of the bar
                 barStartY = barGap + cc * barHeight+ cc * barGap
-
                 if(drawNamesOnYAxis){
                     // Define a new path
                     ctx.beginPath()
                     ctx.fillStyle = "#111111"
                     // Set a start-point
                     ctx.moveTo(Layout.windowWidth * 0.2, barGap)
-
                     // Set an end-point
                     ctx.lineTo(Layout.windowWidth * 0.2, Layout.windowHeight - barGap)
                     // Stroke it (Do the Drawing)
                     ctx.stroke()
                     //draw a line at x = cx * 0.2 and the bars from cx * 0.2 to cx * 0.8
                     barStartX = Layout.windowWidth * 0.2
-                
                     barEndX = CurrentFrameValues[cc] / max
                     barEndX = barEndX * Layout.windowWidth * 0.7 +Layout.windowWidth * 0.2
                     //fill a rect on the canvas
-                    ctx.fillStyle = DataObjects[cc].color
-                    ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
-                    ctx.fillStyle = "black"
-                    ctx.font = "2vh Arial"
-                    
+                    drawBar(ctx, barStartX, barEndX, barHeight)
+                    //displaying name and value of the data object
                     ctx.fillText(scaleValue(CurrentFrameValues[cc]), Layout.windowWidth * 0.205,barStartY + barHeight / 2)
                     ctx.fillText(DataObjects[cc].name, Layout.windowWidth * 0.012, barStartY + barHeight / 2)
                     cc += 1  
                 }else{
                     //draw bars over the canvas from x = 0
                     barStartX = 0 
-                
                     barEndX = CurrentFrameValues[cc] / max
                     barEndX = barEndX * Layout.windowWidth * 0.8
                     //fill a rect on the canvas
-                    ctx.fillStyle = DataObjects[cc].color
-                    ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
-                    ctx.fillStyle = "black"
-                    ctx.font = "2vh Arial"
-                    
+                    drawBar(ctx, barStartX, barEndX, barHeight)
+                    //displaying name and value of the data object
                     ctx.fillText(scaleValue(CurrentFrameValues[cc]), barEndX, barStartY + barHeight / 3)
                     ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
                     cc += 1  
                 }
-
-    
-            }
-             
+            }   
           }
         }
     }
-    if(graphType == "lines5s"){
+    if(graphType == "lines"){
         //a line graph for the latest 15 seconds of the animation (FPS * 5) frames
-
         //creating dataobjects.length lists that store 5 * FPS values
         fiveSecondsInFrames = 5 * FPS
         let c = 0
@@ -264,40 +269,40 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
         let id = null
         let max = 0
         let CFVmax = 0
+        let XPos = 0
+        let cc = 0
+        let CurrentValueY = 0
+        let NextValueY = 0
+        let CurrentRow = ""
+        let Xnodes = 0
+        let spacingXnodes = 0
         clearInterval(id);
         id = setInterval(frame, waitMilliseconds);
         function frame() {
           if (EndItem>= framesInTotal -1) {
             clearInterval(id);
           } else {
-            EndItem++
-            let Xnodes = EndItem - StartItem - 1
-            if(EndItem - StartItem >= 13*FPS-1){
-                StartItem++
-            }
-            let spacingXnodes = Layout.windowWidth / Xnodes
-            let CurrentRow = DataObjects[0].rowNames[EndItem]
-            ctx.fillStyle = "white"
+            //function to limit the number of lines per data object below FPS*13
+            StartItem, EndItem, Xnodes = linegraphRange(StartItem, EndItem)
+            //the spacing between every line start and end point on the x axis
+            spacingXnodes = Layout.windowWidth / Xnodes
+            CurrentRow = DataObjects[0].rowNames[EndItem]
             document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
-            console.log(title)
+            //clearing the canvas
+            ctx.fillStyle = "white"
             ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
             ctx.lineWidth = 4
             c = 0
             CurrentFrameValues = []
-            
             while (c < DataObjects.length){
                 CurrentFrameValues.push(DataObjects[c].values[EndItem])
                 c++
             }
-            CFVmax = Math.max.apply(null, CurrentFrameValues)
+            CFVmax = getMaximumFrameValue(CurrentFrameValues)
             if(CFVmax > max){
                 max = CFVmax
             }
-            //drawing all the nodes
-            let XPos = 0
-            let cc = 0
-            let CurrentValueY = 0
-            let NextValueY = 0
+            //drawing all the nodes (start and end points of lines)
             c = 0
             console.log(max)
             while(c<DataObjects.length){
@@ -319,9 +324,9 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     XPos += spacingXnodes * 0.85
                     cc++
                 }
+                //drawing name and value of the data object
                 ctx.fillStyle = "black"
                 ctx.font = "1.3vh Arial"
-                
                 ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
                 ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + barGap)
                 cc += 1  
@@ -329,14 +334,10 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
             }
           }
         }
-
-
     }
-
-    
-
 }
 //--------------------------------------------PROGRAM----------------------------------------
+//LOADING
 //storing the csv file as string
 let csvString = document.getElementById("output").innerText
 //finding the separating symbol
@@ -346,13 +347,17 @@ console.log("Found separating symbol in csv string: "+ separatingSymbol)
 let csvMatrix = readCSVstring(csvString)
 csvMatrix = convertCSVMatrix(csvMatrix)
 
-//creating the data for all frames that will be animated
-
+//VARIABLES
 let FramesPerValue = 80 //number of frames per value in the matrix
 let FPS = 30
+let LayoutData = {}
+let canvasSize = [0.6,0.6] //[1,1] wound be 100vw 100vh
+
+//ANIMATION
 let duration = document.getElementById("duration_slider").value
 FramesPerValue = parseInt((FPS * duration) / csvMatrix.length)
-//reading the bcsv matrix in a different way
+//reading the csv matrix in a different way
+//creating the data for all frames that will be animated
 let AnimationDataObjects = CreateArrays(csvMatrix, FramesPerValue)
 //creating a layout
 LayoutData = Layout(LayoutData, AnimationDataObjects, canvasSize)
@@ -361,4 +366,3 @@ createCanvas(LayoutData)
 //animating the values for every frame
 AnimateData(AnimationDataObjects, FPS, LayoutData, document.getElementById("canvas"), document.getElementById("canvas").getContext("2d"), csvMatrix[0][1])
 console.log("create animation data objects:", AnimationDataObjects)
-
