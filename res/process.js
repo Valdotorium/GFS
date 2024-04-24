@@ -1,7 +1,7 @@
-
+//--------------------------------------------FUNCTIONS----------------------------------------
 let findSeparatingSymbol = function(csvString){
     //c is used as counter
-    console.log("loaded csv string:", csvString)
+    //console.log("loaded csv string:", csvString)
     let c = 0
     let foundSeparatingSymbol = false
     console.log(Array.from(csvString)[0])
@@ -25,7 +25,7 @@ let readCSVstring = function (csvString){
 
         csvMatrix.push(csvArray[i])
         }
-    console.log(csvMatrix)
+    //console.log(csvMatrix)
     return csvMatrix
     }
     
@@ -45,27 +45,11 @@ let convertCSVMatrix = function (csvMatrix) {
         }
     }
     console.log("Coverted Matrix: ",csvMatrix)
-    console.log("Diagram Title:" , diagramTitle)
     return csvMatrix
     }
 
 
-console.log(document.getElementById("output").innerText)
-//storing the csv file as string
-let csvString = document.getElementById("output").innerText
-//finding the separating symbol
-let separatingSymbol = findSeparatingSymbol(csvString)
-console.log("Found separating symbol in csv string: "+ separatingSymbol)
-//reading the csv string
-let csvMatrix = readCSVstring(csvString)
-csvMatrix = convertCSVMatrix(csvMatrix)
 
-//creating the data for all frames that will be animated
-
-let FramesPerValue = 80 //number of frames per value in the matrix
-let FPS = 30
-let duration = document.getElementById("duration_slider").value
-FramesPerValue = parseInt((FPS * duration) / csvMatrix.length)
 
 let CreateArrays = function (csvMatrix, FramesPerValue){
     let c = 1
@@ -268,6 +252,22 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
     
 
 }
+//--------------------------------------------PROGRAM----------------------------------------
+//storing the csv file as string
+let csvString = document.getElementById("output").innerText
+//finding the separating symbol
+let separatingSymbol = findSeparatingSymbol(csvString)
+console.log("Found separating symbol in csv string: "+ separatingSymbol)
+//reading the csv string
+let csvMatrix = readCSVstring(csvString)
+csvMatrix = convertCSVMatrix(csvMatrix)
+
+//creating the data for all frames that will be animated
+
+let FramesPerValue = 80 //number of frames per value in the matrix
+let FPS = 30
+let duration = document.getElementById("duration_slider").value
+FramesPerValue = parseInt((FPS * duration) / csvMatrix.length)
 //reading the bcsv matrix in a different way
 let AnimationDataObjects = CreateArrays(csvMatrix, FramesPerValue)
 //creating a layout
