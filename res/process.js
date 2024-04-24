@@ -169,6 +169,12 @@ let createCanvas = function(Layout){
 
 let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) {
     let graphType = "bars"
+    if (document.getElementById("line_graph_checkbox").checked){
+        graphType = "lines5s"
+    } else{
+        graphType = "bars"
+    }
+
     let framesInTotal = DataObjects[0].values.length
     //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
@@ -251,7 +257,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     ctx.font = "2vh Arial"
                     
                     ctx.fillText(scaleValue(CurrentFrameValues[cc]), barEndX, barStartY + barHeight / 3)
-                    ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight)
+                    ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
                     cc += 1  
                 }
 
@@ -261,7 +267,85 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
           }
         }
     }
-    if(graphType == "lines"){
+    if(graphType == "lines5s"){
+        //a line graph for the latest 15 seconds of the animation (FPS * 5) frames
+
+        //creating dataobjects.length lists that store 5 * FPS values
+        fiveSecondsInFrames = 5 * FPS
+        let c = 0
+        let StartItem = 0
+        let EndItem = 1
+        let barGap = Layout.barGap
+        let CurrentFrameValues = []
+        let id = null
+        let max = 0
+        let CFVmax = 0
+        clearInterval(id);
+        id = setInterval(frame, waitMilliseconds);
+        function frame() {
+          if (EndItem>= framesInTotal -1) {
+            clearInterval(id);
+          } else {
+            EndItem++
+            let Xnodes = EndItem - StartItem - 1
+            if(EndItem - StartItem >= 13*FPS-1){
+                StartItem++
+            }
+            let spacingXnodes = Layout.windowWidth / Xnodes
+            let CurrentRow = DataObjects[0].rowNames[EndItem]
+            ctx.fillStyle = "white"
+            document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
+            console.log(title)
+            ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
+            ctx.lineWidth = 4
+            c = 0
+            CurrentFrameValues = []
+            
+            while (c < DataObjects.length){
+                CurrentFrameValues.push(DataObjects[c].values[EndItem])
+                c++
+            }
+            CFVmax = Math.max.apply(null, CurrentFrameValues)
+            if(CFVmax > max){
+                max = CFVmax
+            }
+            //drawing all the nodes
+            let XPos = 0
+            let cc = 0
+            let CurrentValueY = 0
+            let NextValueY = 0
+            c = 0
+            console.log(max)
+            while(c<DataObjects.length){
+                XPos= 0
+                cc = 0
+                while(cc<Xnodes){
+                    ctx.beginPath()
+                    ctx.strokeStyle =DataObjects[c].color
+                    // Set a start-point
+                    CurrentValueY = Layout.windowHeight -(DataObjects[c].values[StartItem + cc] / max) * Layout.windowHeight *0.9
+                    NextValueY = Layout.windowHeight - (DataObjects[c].values[StartItem + 1 +cc] / max) * Layout.windowHeight*0.9
+                    ctx.moveTo(XPos, CurrentValueY)
+
+                    // Set an end-point
+                    ctx.lineTo(XPos + spacingXnodes * 0.85, NextValueY)
+                    // Stroke it (Do the Drawing)
+                    ctx.stroke()
+                    
+                    XPos += spacingXnodes * 0.85
+                    cc++
+                }
+                ctx.fillStyle = "black"
+                ctx.font = "1.3vh Arial"
+                
+                ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
+                ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + barGap)
+                cc += 1  
+                c++
+            }
+          }
+        }
+
 
     }
 
