@@ -1,10 +1,10 @@
 #top{
-    background-color: #9AD;
+    background-color: #223;
     min-height: 10vh;
     align-content: center;
 }
 #center{
-    background-color: #DDE;
+    background-color: #222;
     min-height: 80vh;
     align-content: center;
 }
@@ -13,7 +13,7 @@
     vertical-align: middle;
 }
 #bottom{
-    background-color: #BBC;
+    background-color: #FFF;
     min-height: 30vh;
 }
 html, body{
@@ -27,13 +27,15 @@ html, body{
     margin: 0%;
     padding: 0%;
     border-radius: 0%;
+    
 }
 p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     font-family: 'Mukta', sans-serif;
     font-family: 'Ubuntu', sans-serif;
     background-color: inherit;
     font-size: 1.6vmax;
-    font-weight: 400;
+    font-weight: 200;
+    color: #333333
 }
 #btn, #inputfile,button, h1, #logo{
     align-self: center;
@@ -43,7 +45,14 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     margin: 1vmin;
     size: 4vmax;
     font-size: 1.6vmax;
-    font-weight: 400;
+    font-weight: 200;
+    color: #333333
+}
+#btn, #inputfile, button{
+    background-color: #AAA;
+    border-radius: 1vmin;
+    border: 1vmin solid #939393;
+    display: inline-block;
 }
 .slider{
     margin: none;
@@ -70,16 +79,40 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     margin-left: auto;
     margin-right: auto;
     display: block;
+    width: 80vw;
+    height: 80vh;
 }
 #chart_text{
-    width: 70vw;
-    margin-left: 20vw;
+    width: auto;
     font-size : 3.5vw
 }
 #graph_menu{
     display: inline-block;
-    margin-left: 20vw;
-    margin-right: 20vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    width: 60vw;
     font-size : 3vmin;
     align-content: center;
+    background-color: #AAA;
+    background-size: cover;
+    border-radius: 20px;
+    border: 15px solid #272727;
+    padding-left: 10vw;
+    padding-right: 10vw;
+    padding-top: 2vmin;
+    padding-bottom: 2vmin;
+}
+#animation_placeholder{
+    display: inline-block;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    width: 80vw;
+    background-color: #FFF;
+    border-radius: 20px;
+    border: 15px solid #333333;
+    text-align: center;
+
+}
+.black{
+    color: #444;
 }
