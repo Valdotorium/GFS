@@ -4,19 +4,18 @@
     min-width: 80vw;
     display: inline-block;
     text-align: center;
-    border-bottom: 1.25vmax solid #999;
+    align-items: center;
+    border-bottom: 1vmax solid #999;
 }
-#logo{
-   width: 6vmax;
+#header #logo{
+   width: 4vmax;
    margin: auto;
-   display: inline-block;
-   background-color: #2D2D3D;
-   border-radius: 3vmin;
-   border: 2vmin solid #272737;
+   vertical-align: middle;
+   height: 4vmax;
+
 }
 #contents #text{
     font-size: 2vmax;
-    margin: auto;	
     padding: none;
     display: inline-block;
 }

@@ -37,7 +37,7 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
     font-weight: 200;
     color: #333333
 }
-#btn, #inputfile,button, h1, #logo{
+#btn, #inputfile,button, h1,#logo{
     align-self: center;
     font-family: 'Mukta', sans-serif;
     font-family: 'Ubuntu', sans-serif;
@@ -63,15 +63,34 @@ p,a,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
 #output{
     display: block;
     opacity: 0;
+    font-size: 0.1vmin;
 
 }
 #header{
     display: block;
     align-items: center;
 }
+.content{
+    margin: 3.5vmin
+}
+#footer{
+    margin-top: 10vh;
+    border-top: 1vmax solid #999;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    width: 80vw;
+    align-content: center;
+    display: inline-block;
+    text-align: center;
+}
 #header h1 {
     display: inline-block;
     
+}
+#image{
+    width:4vw;
+    align-self: center;
+    opacity: 0.25;
 }
 #canvas{
     padding-left: 0;

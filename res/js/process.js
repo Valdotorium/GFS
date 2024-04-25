@@ -3,9 +3,34 @@ let findSeparatingSymbol = function(csvString){
     //c is used as counter
     //console.log("loaded csv string:", csvString)
     let c = 0
-    let foundSeparatingSymbol = false
-    console.log(Array.from(csvString)[0])
-    return Array.from(csvString)[0]
+    let found = false
+    let separatingSymbol = ""
+    while (found == false){
+        if (csvString[c] == ","){
+            found = true
+            separatingSymbol = ","
+        } else if (csvString[c] == ";"){
+            found = true
+            separatingSymbol = ";"
+        } else if (csvString[c] == "-"){
+            found = true
+            separatingSymbol = "-"
+        } else if (csvString[c] == "|"){
+            found = true
+            separatingSymbol = "|"
+        } else if (csvString[c] == ":"){
+            found = true
+            separatingSymbol = ":"
+        } else if (c > csvString.length - 2){
+            found = true
+            separatingSymbol = " "
+            console.log("ERROR did not find separating symbol")
+        }
+        else {
+            c++
+        }
+    }
+    return separatingSymbol
 
 }
 //fuction for waiting
@@ -57,7 +82,7 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
     while (c < csvMatrix[1].length){
         //every column has one data object
         let DataObject = {}
-        DataObject.name = csvMatrix[0][c+1] //because of the separating symbol
+        DataObject.name = csvMatrix[0][c] //because of the separating symbol
         DataObject.color = Colors[c%6]
         DataObject.values = []
         DataObject.rowNames = []
@@ -84,6 +109,12 @@ let CreateArrays = function (csvMatrix, FramesPerValue){
                 ccc += 1
             }
             cc += 1
+            //the last frame
+            if(cc == csvMatrix.length -1){
+                CurrentValue = csvMatrix[cc][c]
+                DataObject.values.push(CurrentValue)
+                DataObject.rowNames.push(csvMatrix[cc][0])
+            }
         }
         DataObjects.push(DataObject)
         c += 1 
@@ -99,9 +130,9 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     console.log("browser window width:",Layout.windowWidth)
     console.log("browser window height:",Layout.windowHeight)
     //spacing and distribution of bars on the x axis
-    Layout.barGap = 10
+    Layout.barGap = 40 /DataObjects.length - 1+2
     Layout.barCount = DataObjects.length - 1
-    Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / parseInt(Layout.barCount * 1.5)
+    Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / parseInt(Layout.barCount * 1.2)
     if (Layout.barWidth > 80){
         Layout.barWidth = 80
     }
@@ -240,8 +271,8 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     //fill a rect on the canvas
                     drawBar(ctx, barStartX, barStartY,barEndX, barHeight,DataObjects[cc].color)
                     //displaying name and value of the data object
-                    ctx.fillText(scaleValue(CurrentFrameValues[cc]), barEndX, barStartY + barHeight / 3)
-                    ctx.fillText(DataObjects[cc].name, barEndX, barStartY + barHeight / 1.5)
+                    ctx.fillText(scaleValue(CurrentFrameValues[cc]), barEndX, barStartY+ barHeight /2)
+                    ctx.fillText(DataObjects[cc].name, barEndX - ctx.measureText(DataObjects[cc].name).width - 4, barStartY + barHeight /2)
                     cc += 1  
                 }
             }   
@@ -285,7 +316,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
             //clearing the canvas
             ctx.fillStyle = "white"
             ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
-            ctx.lineWidth = 4
+            ctx.lineWidth = 3
             c = 0
             CurrentFrameValues = []
             while (c < DataObjects.length){
@@ -333,6 +364,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
 //--------------------------------------------PROGRAM----------------------------------------
 //LOADING
 //storing the csv file as string
+document.getElementById("btn").innerHTML = "Reload page to play again"
 let csvString = document.getElementById("output").innerText
 //finding the separating symbol
 let separatingSymbol = findSeparatingSymbol(csvString)
@@ -358,5 +390,5 @@ LayoutData = Layout(LayoutData, AnimationDataObjects, canvasSize)
 //adding a canvas to the page
 createCanvas(LayoutData)
 //animating the values for every frame
-AnimateData(AnimationDataObjects, FPS, LayoutData, document.getElementById("canvas"), document.getElementById("canvas").getContext("2d"), csvMatrix[0][1])
+AnimateData(AnimationDataObjects, FPS, LayoutData, document.getElementById("canvas"), document.getElementById("canvas").getContext("2d"), csvMatrix[0][0])
 console.log("create animation data objects:", AnimationDataObjects)
