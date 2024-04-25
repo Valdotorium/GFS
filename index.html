@@ -15,18 +15,21 @@
     </section>
     <section id="center">
         <div>
-        <input type="file" id="inputfile" placeholder="place the csv or txt file here">
-        <button id='btn'>Generate</button>
-        <input type="checkbox" id = "values_position_checkbox" name="Display names on y-axis"><b>display names on y-axis?</b>
-        <input type="checkbox" id = "line_graph_checkbox" name="Make a Line Graph?"><b>make a line graph?</b>
-        <br><br><span>
-            <b id = "duration_value">Duration:</b> <br>
-            <input id="duration_slider"class="slider" type = "range" min = "10" max = "120" step = "5">
-        </span>
+        <div id = "graph_menu">
+            <input type="file" id="inputfile" placeholder="place the csv or txt file here"><br>
+            <button id='btn'>Generate</button><br>
+            <input type="checkbox" id = "values_position_checkbox" placeholder="Display names on y-axis"><b>display names on y-axis?</b><br>
+            <input type="checkbox" id = "line_graph_checkbox" placeholder="Make a Line Graph?"><b>make a line graph?</b>
+            <br><span>
+                <b id = "duration_value">Duration: 60s</b>
+                <input id="duration_slider"class="slider" type = "range" min = "10" max = "120" step = "5" placeholder="duration">
+            </span>
+        </div>
+
         
         <div id="animation_placeholder"></div>
         <p id = "output"></p>
-        <script type="text/javascript" src="res/read.js"></script>
+        <script type="text/javascript" src="res/js/read.js"></script>
         <script type="text/javascript">
     
             var myButton = document.getElementById('btn');
@@ -35,11 +38,11 @@
     
                 var script = document.createElement("script");
                 script.type = "text/javascript";
-                script.src = "res/process.js"; 
+                script.src = "res/js/process.js"; 
                 document.getElementsByTagName("head")[0].appendChild(script);
                 var script = document.createElement("script");
                 script.type = "text/javascript";
-                script.src = "res/animate.js"; 
+                script.src = "res/js/animate.js"; 
                 document.getElementsByTagName("head")[0].appendChild(script);
                 return false;
     
@@ -49,8 +52,8 @@
         </script>
     </div>
     </section>
-    <script src="res/include.js" type="text/javascript">    </script>
-    <script src="res/animate.js" type="text/javascript">    </script>
+    <script src="res/js/include.js" type="text/javascript">    </script>
+    <script src="res/js/animate.js" type="text/javascript">    </script>
 
 </body>
 </html>
