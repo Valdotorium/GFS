@@ -24,7 +24,7 @@ Inhabitants ; Doeton ; Johnville
 If you navigate to res/data in this repository, you will find some example statistics! (some are made up)  
 
 Even though only the symbols , and ; are commonly used in csv to separate values,    
-here, all these symbols can be used-> ; : - |   
+the symbols that can be used to separate values here are , | and ;  
 So, do not include these in any value or name in your table except to separate values.  
 So that the program does not  
 find the wrong separating symbol and doesnt load correctly.
