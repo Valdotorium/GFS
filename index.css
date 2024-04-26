@@ -1,10 +1,10 @@
 #top{
-    background-color: #223;
+    background-color: #151526;
     min-height: 10vh;
     align-content: center;
 }
 #center{
-    background-color: #222;
+    background-color: #050509;
     min-height: 80vh;
     align-content: center;
 }
@@ -29,36 +29,35 @@ html, body{
     border-radius: 0%;
     
 }
-p,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table{
-    font-family: 'Mukta', sans-serif;
-    font-family: 'Ubuntu', sans-serif;
+p,b,strong,span,li,ul,ol,h1,h2,h3,h4,h5,h6,pre,table, select, option, label{
+    font-family: 'Verdana', sans-serif;
     background-color: inherit;
     font-size: 1.6vmax;
-    font-weight: 200;
+    font-weight: 100;
     color: #3A3A3A
 }
 a{
-    font-family: 'Mukta', sans-serif;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Verdana', sans-serif;
+
     background-color: inherit;
     font-size: 1.25vmax;
-    font-weight: 200;
+    font-weight: 100;
     color: #474747
 }
 #btn, #inputfile,button, h1,#logo{
     align-self: center;
-    font-family: 'Mukta', sans-serif;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Verdana', sans-serif;
+
     padding: 1vmin;
     margin: 1vmin;
     size: 4vmax;
     font-size: 1.6vmax;
-    font-weight: 200;
+    font-weight: 100;
     color: #333333
 }
 #btn, #inputfile, button{
     background-color: #AAA;
-    border-radius: 1vmin;
+    border-radius: 0.25vmin;
     border: 1vmin solid #939393;
     display: inline-block;
 }
@@ -120,10 +119,9 @@ a{
     width: 60vw;
     font-size : 3vmin;
     align-content: center;
-    background-color: #AAA;
+    background-color: #CCC;
     background-size: cover;
-    border-radius: 20px;
-    border: 15px solid #272727;
+    border-top: 1vmax solid #999;
     padding-left: 10vw;
     padding-right: 10vw;
     padding-top: 2vmin;
@@ -135,8 +133,7 @@ a{
     margin-right: 10vw;
     width: 80vw;
     background-color: #FFF;
-    border-radius: 20px;
-    border: 15px solid #333333;
+    border-top: 1vmax solid #999;
     text-align: center;
 
 }
@@ -146,4 +143,10 @@ a{
 .htu{
     font-size: 1.3vmax;
     color: #666
+}
+#site-header b, #site-header{
+    align-self: center;
+    text-align: center;
+    font-weight: 400;
+    color: #666;
 }

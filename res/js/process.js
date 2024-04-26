@@ -12,15 +12,9 @@ let findSeparatingSymbol = function(csvString){
         } else if (csvString[c] == ";"){
             found = true
             separatingSymbol = ";"
-        } else if (csvString[c] == "-"){
-            found = true
-            separatingSymbol = "-"
         } else if (csvString[c] == "|"){
             found = true
             separatingSymbol = "|"
-        } else if (csvString[c] == ":"){
-            found = true
-            separatingSymbol = ":"
         } else if (c > csvString.length - 2){
             found = true
             separatingSymbol = " "
@@ -76,7 +70,7 @@ let convertCSVMatrix = function (csvMatrix) {
 let CreateArrays = function (csvMatrix, FramesPerValue){
     let c = 1
     //colors of bars / lines in the chart
-    let Colors= ["#BB4444", "#44BB44", "#4444BB", "#BBBB44", "#44BBBB", "#BB44BB"]
+    let Colors= ["#DD9999", "#99DD99", "#9999DD", "#DDDD99", "#99DDDD", "#DD99DD", "#DDAA99", "#AADD99", "#DD99AA", "#AA99DD"]
     let DataObjects = []
     //creating the data for all frames that will be animated
     while (c < csvMatrix[1].length){
@@ -198,12 +192,7 @@ let createCanvas = function(Layout){
 
 let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) {
     //checking the status of the make line graph checkbox
-    let graphType = "bars"
-    if (document.getElementById("line_graph_checkbox").checked){
-        graphType = "lines"
-    } else{
-        graphType = "bars"
-    }
+    let graphType = document.getElementById("graph_list").value
     let framesInTotal = DataObjects[0].values.length
     //milliseconds between each frame
     let waitMilliseconds = 1000 / FPS
@@ -215,6 +204,8 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
         let CurrentFrameValues = []
         let CurrentRow = ""
         var id = null
+        let min = 0
+        let range = 0
         const barHeight = Layout.barWidth
         const barGap = Layout.barGap
         clearInterval(id);
@@ -239,6 +230,12 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
             ctx.fillStyle = "white"
             ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
             max = getMaximumFrameValue(CurrentFrameValues)
+            min = Math.min.apply(null, CurrentFrameValues)
+            let ZeroX = 0
+            if (min > 0){
+                min = 0
+            }
+            range = -min + max
             while (cc<CurrentFrameValues.length){
                 //animate on the cancas here
                 //y pos of the bar
@@ -253,10 +250,23 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     ctx.lineTo(Layout.windowWidth * 0.2, Layout.windowHeight - barGap)
                     // Stroke it (Do the Drawing)
                     ctx.stroke()
+
+                    //line at zero
+                    ctx.beginPath()
+                    ctx.strokeStyle = "#777"
+                    ctx.lineWidth = 8
+                    // Set a start-point
+                    ZeroX = ((0 +- min) / range)* Layout.windowWidth * 0.7 +Layout.windowWidth * 0.2
+                    ctx.moveTo(ZeroX, barGap)
+                    // Set an end-point
+                    ctx.lineTo(ZeroX, Layout.windowHeight - barGap)
+                    // Stroke it (Do the Drawing)
+                    ctx.stroke()
                     //draw a line at x = cx * 0.2 and the bars from cx * 0.2 to cx * 0.8
-                    barStartX = Layout.windowWidth * 0.2
-                    barEndX = CurrentFrameValues[cc] / max
+                    barStartX = (0 +- min) / range
+                    barEndX = (CurrentFrameValues[cc] +- min) / range
                     barEndX = barEndX * Layout.windowWidth * 0.7 +Layout.windowWidth * 0.2
+                    barStartX = barStartX * Layout.windowWidth * 0.7 +Layout.windowWidth * 0.2
                     //fill a rect on the canvas
                     drawBar(ctx, barStartX,  barStartY,barEndX, barHeight, DataObjects[cc].color)
                     //displaying name and value of the data object
@@ -264,10 +274,23 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     ctx.fillText(DataObjects[cc].name, Layout.windowWidth * 0.012, barStartY + barHeight / 2)
                     cc += 1  
                 }else{
+                    
                     //draw bars over the canvas from x = 0
-                    barStartX = 0 
-                    barEndX = CurrentFrameValues[cc] / max
-                    barEndX = barEndX * Layout.windowWidth * 0.8
+                    barStartX = 0
+                    barEndX = (CurrentFrameValues[cc] +- min) / range
+                    barEndX = barEndX * Layout.windowWidth * 0.8+Layout.windowWidth * 0.05
+                    ZeroX = ((0 +- min) / range)* Layout.windowWidth * 0.8+Layout.windowWidth * 0.05
+                    //line at zero
+                    ctx.beginPath()
+                    ctx.lineWidth = 8
+                    ctx.fillStyle = "#111111"
+                    ctx.strokeStyle = "#777"
+                    // Set a start-point
+                    ctx.moveTo(ZeroX, barGap)
+                    // Set an end-point
+                    ctx.lineTo(ZeroX, Layout.windowHeight - barGap)
+                    // Stroke it (Do the Drawing)
+                    ctx.stroke()
                     //fill a rect on the canvas
                     drawBar(ctx, barStartX, barStartY,barEndX, barHeight,DataObjects[cc].color)
                     //displaying name and value of the data object
@@ -289,7 +312,10 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
         let CurrentFrameValues = []
         let id = null
         let max = 0
+        let min = 0
+        let range = 0
         let CFVmax = 0
+        let CFVmin = 0
         let XPos = 0
         let cc = 0
         let CurrentValueY = 0
@@ -316,7 +342,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
             //clearing the canvas
             ctx.fillStyle = "white"
             ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
-            ctx.lineWidth = 3
+            ctx.lineWidth = 8
             c = 0
             CurrentFrameValues = []
             while (c < DataObjects.length){
@@ -324,12 +350,19 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 c++
             }
             CFVmax = getMaximumFrameValue(CurrentFrameValues)
+            CFVmin = Math.min.apply(null, CurrentFrameValues)
             if(CFVmax > max){
                 max = CFVmax
             }
+            if(CFVmin < min){
+                min = CFVmin
+            }
             //drawing all the nodes (start and end points of lines)
             c = 0
-            console.log(max)
+
+            range = -min + max
+            console.log(CFVmin)
+            let ZeroY = Layout.windowHeight -((0 +- min) / range) * Layout.windowHeight *0.9 - Layout.windowHeight *0.05
             while(c<DataObjects.length){
                 XPos= 0
                 cc = 0
@@ -337,8 +370,8 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     ctx.beginPath()
                     ctx.strokeStyle =DataObjects[c].color
                     // Set a start-point
-                    CurrentValueY = Layout.windowHeight -(DataObjects[c].values[StartItem + cc] / max) * Layout.windowHeight *0.9
-                    NextValueY = Layout.windowHeight - (DataObjects[c].values[StartItem + 1 +cc] / max) * Layout.windowHeight*0.9
+                    CurrentValueY = Layout.windowHeight -((DataObjects[c].values[StartItem + cc] +- min) / range) * Layout.windowHeight *0.9 - Layout.windowHeight *0.05
+                    NextValueY = Layout.windowHeight - ((DataObjects[c].values[StartItem + 1 +cc] +- min) / range) * Layout.windowHeight*0.9 - Layout.windowHeight *0.05
                     ctx.moveTo(XPos, CurrentValueY)
 
                     // Set an end-point
@@ -356,11 +389,177 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 55) 
                 c++
             }
+            ctx.beginPath()
+            ctx.moveTo(0,ZeroY)
+            ctx.strokeStyle = "#AAA"
+             // Set an end-point
+            ctx.lineTo(Layout.windowWidth, ZeroY)
+            // Stroke it (Do the Drawing)
+            ctx.stroke()
           }
         }
       }
-  }
+  
+    if(graphType == "area"){
+        //a line graph for the latest 15 seconds of the animation (FPS * 5) frames
+        //creating dataobjects.length lists that store 5 * FPS values
+        let c = 0
+        let StartItem = 0
+        let EndItem = 1
+        let barGap = Layout.barGap
+        let CurrentFrameValues = []
+        let id = null
+        let max = 0
+        let min = 0
+        let range = 0
+        let CFVmax = 0
+        let CFVmin = 0
+        let XPos = 0
+        let cc = 0
+        let CurrentValueY = 0
+        let NextValueY = 0
+        let CurrentRow = ""
+        let Xnodes = 1
+        let spacingXnodes = 0
+        clearInterval(id);
+        id = setInterval(frame, waitMilliseconds);
+        function frame() {
+        if (EndItem>= framesInTotal -1) {
+            clearInterval(id);
+        } else {
+            //function to limit the number of lines per data object below FPS*13
+            EndItem++
+            Xnodes = EndItem - StartItem - 1
+            if(EndItem - StartItem >= 10*FPS-1){
+                StartItem++
+            }
+            //the spacing between every line start and end point on the x axis
+            spacingXnodes = Layout.windowWidth / Xnodes
+            CurrentRow = DataObjects[0].rowNames[EndItem]
+            document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
+            //clearing the canvas
+            ctx.fillStyle = "white"
+            ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
+            ctx.lineWidth = 8
+            c = 0
+            CurrentFrameValues = []
+            while (c < DataObjects.length){
+                CurrentFrameValues.push(DataObjects[c].values[EndItem])
+                c++
+            }
+            CFVmax = getMaximumFrameValue(CurrentFrameValues)
+            CFVmin = Math.min.apply(null, CurrentFrameValues)
+            if(CFVmax > max){
+                max = CFVmax
+            }
+            if(CFVmin < min){
+                min = CFVmin
+            }
+            //drawing all the nodes (start and end points of lines)
+            c = 0
 
+            range = -min + max
+            console.log(CFVmin)
+            let ZeroY = Layout.windowHeight -((0 +- min) / range) * Layout.windowHeight *0.9 - Layout.windowHeight *0.05
+            while(c<DataObjects.length){
+                XPos= 0
+                cc = 0
+                ctx.beginPath()
+                ctx.strokeStyle =DataObjects[c].color
+                ctx.fillStyle =DataObjects[c].color
+                ctx.moveTo(0,Layout.windowHeight *0.95 )
+                while(cc<Xnodes){
+                    
+                    // Set a start-point
+                    CurrentValueY = Layout.windowHeight -((DataObjects[c].values[StartItem + cc] +- min) / range) * Layout.windowHeight *0.9 - Layout.windowHeight *0.05
+                    NextValueY = Layout.windowHeight - ((DataObjects[c].values[StartItem + 1 +cc] +- min) / range) * Layout.windowHeight*0.9 - Layout.windowHeight *0.05
+                    ctx.lineTo(XPos, CurrentValueY)
+
+                    // Set an end-point
+                    ctx.lineTo(XPos + spacingXnodes * 0.85, NextValueY)
+                    // Stroke it (Do the Drawing)
+                    
+                    
+                    
+                    XPos += spacingXnodes * 0.85
+                    cc++
+                }
+                ctx.lineTo(Layout.windowWidth * 0.85,Layout.windowHeight *0.95 )
+                ctx.closePath()
+                ctx.fill()
+                //drawing name and value of the data object
+                ctx.fillStyle = "black"
+                ctx.font = "4vh Arial"
+                ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
+                ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 55) 
+                c++
+            }
+            ctx.beginPath()
+            ctx.moveTo(0,ZeroY)
+            ctx.strokeStyle = "#AAA"
+            // Set an end-point
+            ctx.lineTo(Layout.windowWidth, ZeroY)
+            // Stroke it (Do the Drawing)
+            ctx.stroke()
+        }
+        }
+    
+    }
+    if(graphType == "stack"){
+        //a line graph for the latest 15 seconds of the animation (FPS * 5) frames
+        //creating dataobjects.length lists that store 5 * FPS values
+        let c = 0
+        let up = true
+        let barGap = Layout.barGap
+        let CurrentFrameValues = []
+        let id = null
+        let CurrentRow = ""
+        let barStartY = 0
+        let barEndY = 0
+        let cc = 0
+        let XPos = Layout.windowWidth*0.1
+        clearInterval(id);
+        id = setInterval(frame, waitMilliseconds);
+        function frame() {
+        if (cc >= framesInTotal -1) {
+            clearInterval(id);
+        } else {
+            up = true
+                XPos = Layout.windowWidth*0.1
+                CurrentRow = DataObjects[0].rowNames[cc]
+                document.getElementById("chart_text").innerText = title + " - "+ CurrentRow
+                //clearing the canvas
+                ctx.fillStyle = "white"
+                ctx.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
+                ctx.lineWidth = 8
+                c = 0
+                CurrentFrameValues = []
+                let total = 0
+                while (c < DataObjects.length){
+                    CurrentFrameValues.push(DataObjects[c].values[cc])
+                    total += DataObjects[c].values[cc]
+                    c++
+                }
+                cc++
+                barStartY = Layout.windowHeight * 0.45
+                barEndY = Layout.windowHeight * 0.55
+                c = 0
+                let XPerUnit = (Layout.windowWidth * 0.8) / total
+                while(c<DataObjects.length){
+                    up = !up
+                    drawBar(ctx, XPos, barStartY,XPos + CurrentFrameValues[c] * XPerUnit, barEndY - barStartY, DataObjects[c].color)
+                    console.log(XPos)
+                    XPos = XPos +CurrentFrameValues[c] * XPerUnit
+                    ctx.fillStyle = "black"
+                    ctx.font = "3.5vh Arial"
+                    ctx.fillText(scaleValue(DataObjects[c].values[cc]), XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.025 )
+                    ctx.fillText(DataObjects[c].name, XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.075 ) 
+                    c++
+                }
+        }
+        }
+    }
+}
 //--------------------------------------------PROGRAM----------------------------------------
 //LOADING
 //storing the csv file as string

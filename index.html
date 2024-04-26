@@ -15,7 +15,9 @@
         <div w3-include-html="res/templates/header.html" id = "header"></div>
     </section>
     <section id="center">
-        <div>
+        <div><br>
+            <h4 id = "site-header"><b>Animate CSV tables!</b></h4>
+            <br>
         <div id = "graph_menu">
 
             <span>
@@ -23,7 +25,14 @@
             </span>
 
             <input type="checkbox" id = "values_position_checkbox" placeholder="Display names on y-axis"><b>display names on y-axis?</b><br>
-            <input type="checkbox" id = "line_graph_checkbox" placeholder="Make a Line Graph?"><b>make a line graph?</b>
+            <label for="graphs">Choose a graph type:</label>
+
+                <select name="graphs" id="graph_list">
+                <option value="lines">Line Graph</option>
+                <option value="bars">Bar Graph</option>
+                <option value="stack">Stacked Bars</option>
+                <option value="area">Area</option>
+                </select>
             <br><span>
                 <b id = "duration_value">Duration: 60s</b>
                 <input id="duration_slider"class="slider" type = "range" min = "10" max = "120" step = "5" placeholder="duration"><br><br>
