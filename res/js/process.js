@@ -130,11 +130,11 @@ let Layout = function(Layout, DataObjects, animationCanvasSize){
     console.log("browser window width:",Layout.windowWidth)
     console.log("browser window height:",Layout.windowHeight)
     //spacing and distribution of bars on the x axis
-    Layout.barGap = 40 /DataObjects.length - 1+2
+    Layout.barGap = 100 /DataObjects.length - 1+2
     Layout.barCount = DataObjects.length - 1
     Layout.barWidth = (Layout.windowHeight - Layout.barGap * (Layout.barCount + 1)) / parseInt(Layout.barCount * 1.2)
-    if (Layout.barWidth > 80){
-        Layout.barWidth = 80
+    if (Layout.barWidth > 250){
+        Layout.barWidth = 250
     }
     //how far the bars are apart
     Layout.barDisplayDistance = Layout.barWidth + Layout.barGap
@@ -179,7 +179,7 @@ let drawBar= function(ctx, barStartX, barStartY,barEndX,barHeight, color){
     ctx.fillStyle = color
     ctx.fillRect(barStartX, barStartY, barEndX-barStartX , barHeight)
     ctx.fillStyle = "black"
-    ctx.font = "2vh Arial"
+    ctx.font = "5vh Arial"
 }
 
 let createCanvas = function(Layout){
@@ -351,7 +351,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 }
                 //drawing name and value of the data object
                 ctx.fillStyle = "black"
-                ctx.font = "1.3vh Arial"
+                ctx.font = "4vh Arial"
                 ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
                 ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 55) 
                 c++
@@ -377,7 +377,7 @@ csvMatrix = convertCSVMatrix(csvMatrix)
 let FramesPerValue = 80 //number of frames per value in the matrix
 let FPS = 30
 let LayoutData = {}
-let canvasSize = [0.6,0.6] //[1,1] wound be 100vw 100vh
+let canvasSize = [2,2] //[1,1] wound be 100vw 100vh
 
 //ANIMATION
 let duration = document.getElementById("duration_slider").value
