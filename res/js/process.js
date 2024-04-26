@@ -541,8 +541,8 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     c++
                 }
                 cc++
-                barStartY = Layout.windowHeight * 0.45
-                barEndY = Layout.windowHeight * 0.55
+                barStartY = Layout.windowHeight * 0.4
+                barEndY = Layout.windowHeight * 0.6
                 c = 0
                 let XPerUnit = (Layout.windowWidth * 0.8) / total
                 while(c<DataObjects.length){
@@ -551,9 +551,9 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     console.log(XPos)
                     XPos = XPos +CurrentFrameValues[c] * XPerUnit
                     ctx.fillStyle = "black"
-                    ctx.font = "3.5vh Arial"
-                    ctx.fillText(scaleValue(DataObjects[c].values[cc]), XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.025 )
-                    ctx.fillText(DataObjects[c].name, XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.075 ) 
+                    ctx.font = "5vh Arial"
+                    ctx.fillText(scaleValue(DataObjects[c].values[cc]), XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.07 )
+                    ctx.fillText(DataObjects[c].name, XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.13 ) 
                     c++
                 }
         }

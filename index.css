@@ -57,7 +57,7 @@ a{
 }
 #btn, #inputfile, button{
     background-color: #AAA;
-    border-radius: 0.25vmin;
+    border-radius: 0.5vmin;
     border: 1vmin solid #939393;
     display: inline-block;
 }
