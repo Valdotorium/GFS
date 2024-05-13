@@ -591,3 +591,4 @@ createCanvas(LayoutData)
 //animating the values for every frame
 AnimateData(AnimationDataObjects, FPS, LayoutData, document.getElementById("canvas"), document.getElementById("canvas").getContext("2d"), csvMatrix[0][0])
 console.log("create animation data objects:", AnimationDataObjects)
+

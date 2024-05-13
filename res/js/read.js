@@ -14,4 +14,3 @@ document.getElementById("inputfile").addEventListener("change", function(){
     reader.readAsText(document.getElementById("inputfile").files[0])
 
 })
-
