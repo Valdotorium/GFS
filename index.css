@@ -59,7 +59,8 @@ a{
     background-color: #AAA;
     border-radius: 0.5vmin;
     border: 1vmin solid #939393;
-    display: inline-block;
+    display: block;
+    max-width: 58vw;
 }
 .slider{
     margin: none;
