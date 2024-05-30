@@ -27,7 +27,7 @@
             <input type="checkbox" id = "values_position_checkbox" placeholder="Display names on y-axis"><b>display names on y-axis?</b><br>
             <label for="graphs">Choose a graph type:</label>
 
-                <select name="graphs" id="graph_list">
+                <select name="graphs" id="graph_list" title = "graphtypes">
                 <option value="lines">Line Graph</option>
                 <option value="bars">Bar Graph</option>
                 <option value="stack">Stacked Bars</option>
@@ -36,7 +36,12 @@
             <br><span>
                 <b id = "duration_value">Duration: 60s</b>
                 <input id="duration_slider"class="slider" type = "range" min = "10" max = "120" step = "5" placeholder="duration"><br><br>
-                <a class = "htu" href="https://github.com/Valdotorium/GFS/blob/main/readme.md">How to use?</a>
+                <span>
+                    <a class = "htu" href="https://github.com/Valdotorium/GFS/blob/main/readme.md">How to use?</a>
+                    <a class = "htu" href="/res/data/SPmodified.csv" download>
+                            download example file
+                    </a>
+                </span>
             </span>
         </div><br><br><br><br><br>
         <div id="animation_placeholder">
