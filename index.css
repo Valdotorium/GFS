@@ -151,3 +151,20 @@ a{
     font-weight: 400;
     color: #666;
 }
+#keynote_button{
+    display: inline-block;
+    color: #666;
+    font-size : 3vmin;
+    align-content: center;
+    border:none;
+    background-color: #2a2a2a;
+}
+#password{
+    width: 8vw;
+    display: inline-block;
+    color: #666;
+    font-size : 3vmin;
+    align-content: center;
+    border:none;
+    background-color: #2a2a2a;
+}
