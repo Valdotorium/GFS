@@ -154,16 +154,16 @@ a{
 #keynote_button{
     display: inline-block;
     color: #666;
-    font-size : 3vmin;
+    font-size : 1.8vmin;
     align-content: center;
     border:none;
     background-color: #2a2a2a;
 }
 #password{
-    width: 8vw;
+    width: 5vw;
     display: inline-block;
     color: #666;
-    font-size : 3vmin;
+    font-size : 2.2vmin;
     align-content: center;
     border:none;
     background-color: #2a2a2a;
