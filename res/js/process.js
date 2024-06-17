@@ -329,6 +329,8 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
           if (EndItem>= framesInTotal -1) {
             clearInterval(id);
           } else {
+            let TextYs = []
+            let CanDrawText = true
             //function to limit the number of lines per data object below FPS*13
             EndItem++
             Xnodes = EndItem - StartItem - 1
@@ -385,8 +387,18 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 //drawing name and value of the data object
                 ctx.fillStyle = "black"
                 ctx.font = "4vh Arial"
-                ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
-                ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 55) 
+                CanDrawText = true
+                for (i = 0; i < TextYs.length; i++){
+                    if(-Layout.windowHeight / 55 < NextValueY - TextYs[i] < Layout.windowHeight / 55){
+                        CanDrawText = false
+                        console.log("No draw at:",TextYs[i] , NextValueY, Layout.windowHeight / 25)
+                    }
+                }
+                if(CanDrawText){
+                    ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
+                    ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 55) 
+                    TextYs.push(NextValueY)
+                }
                 c++
             }
             ctx.beginPath()
@@ -478,9 +490,6 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     // Set an end-point
                     ctx.lineTo(XPos + spacingXnodes * 0.85, NextValueY)
                     // Stroke it (Do the Drawing)
-                    
-                    
-                    
                     XPos += spacingXnodes * 0.85
                     cc++
                 }
