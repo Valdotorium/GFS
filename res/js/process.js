@@ -558,8 +558,10 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     ctx.fillStyle = "black"
                     ctx.font = "5vh Arial"
                     //writing dataobjects name and value
-                    ctx.fillText(scaleValue(DataObjects[c].values[cc]), XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.07 )
-                    ctx.fillText(DataObjects[c].name, XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.13 ) 
+                    if(DataObjects[c].values[cc] !== 0){
+                        ctx.fillText(scaleValue(DataObjects[c].values[cc]), XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.07 )
+                        ctx.fillText(DataObjects[c].name, XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.13 ) 
+                    }
                     c++
                 }
             }
