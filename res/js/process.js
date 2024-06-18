@@ -387,14 +387,20 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 //drawing name and value of the data object
                 ctx.fillStyle = "black"
                 ctx.font = "4vh Arial"
+                let minimumTextDistance = Layout.windowHeight / 40
                 CanDrawText = true
                 for (i = 0; i < TextYs.length; i++){
-                    if(-Layout.windowHeight / 55 < NextValueY - TextYs[i] < Layout.windowHeight / 55){
+                    //loops through a list with the y positions of the text. if text overlaps, it will not draw the text
+                    
+                    if(-minimumTextDistance < NextValueY - TextYs[i] && NextValueY - TextYs[i] <  minimumTextDistance){
                         CanDrawText = false
-                        console.log("No draw at:",TextYs[i] , NextValueY, Layout.windowHeight / 25)
                     }
                 }
-                if(CanDrawText){
+                minimumTextDistance = Layout.windowHeight / 25
+                if(CanDrawText && -minimumTextDistance < NextValueY - TextYs[i] && NextValueY - TextYs[i] <  minimumTextDistance) {
+                    ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 100) 
+                    TextYs.push(NextValueY)
+                }else if(CanDrawText){
                     ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
                     ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 55) 
                     TextYs.push(NextValueY)
