@@ -143,7 +143,11 @@ a{
 }
 .htu{
     font-size: 1.3vmax;
-    color: #666
+    color: #444;
+    margin-left: 0.4vw;
+    margin-right: 0.4vw;
+    padding: 0.2vw;
+    background-color: #AAA;
 }
 #site-header b, #site-header{
     align-self: center;
