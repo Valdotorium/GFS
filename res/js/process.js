@@ -34,6 +34,8 @@ let readCSVstring = function (csvString){
     //splitting the csv string into an array of strings
     let csvMatrix = []
     //reading the csv string
+    //regular expression from:
+    //https://stackoverflow.com/questions/10805125/how-to-remove-all-line-breaks-from-a-string
     let csvArray = csvString.split(/\r?\n|\r|\n/g)
     //seperating the lines
     console.log("Array split in lines: ",csvArray)
@@ -42,7 +44,6 @@ let readCSVstring = function (csvString){
         csvArray[i] = csvArray[i].split(separatingSymbol)
         csvMatrix.push(csvArray[i])
         }
-    //console.log(csvMatrix)
     return csvMatrix
     }
 let convertCSVMatrix = function (csvMatrix) { 
