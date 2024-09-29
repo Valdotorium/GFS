@@ -198,6 +198,18 @@ let createCanvas = function(Layout){
     canvas.height = Layout.windowHeight
     canvas.id = "canvas"
     document.getElementById("animation_placeholder").appendChild(canvas)
+
+    canvas = document.getElementById("canvas").getContext("2d")
+    canvas.fillStyle = "white"
+    canvas.fillRect(0,0, Layout.windowWidth, Layout.windowHeight)
+    canvas.fillStyle = "black"
+    canvas.font = "5vmin Arial";
+
+    // Show the different textAlign values
+    canvas.textAlign = "center";
+    canvas.fillText("if this is visible for a longer time an error has occurred", Layout.windowWidth / 2, 50);
+    canvas.fillText("most likely the input file has the wrong format.", Layout.windowWidth / 2, 150);
+    canvas.fillText("Consider reading the how to use page for possible fixes.", Layout.windowWidth / 2, 250)
 }
 let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) {
     //checking the status of the make line graph checkbox
@@ -383,7 +395,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 }
                 //drawing name and value of the data object
                 ctx.fillStyle = "black"
-                ctx.font = "4vh Arial"
+                ctx.font = "4.5vmin Arial"
                 let minimumTextDistance = Layout.windowHeight / 40
                 CanDrawText = true
                 for (i = 0; i < TextYs.length; i++){
@@ -494,7 +506,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                 ctx.fill()
                 //drawing name and value of the data object
                 ctx.fillStyle = "black"
-                ctx.font = "4vh Arial"
+                ctx.font = "4.5vmin Arial"
                 ctx.fillText(scaleValue(DataObjects[c].values[EndItem]), XPos + barGap, NextValueY )
                 ctx.fillText(DataObjects[c].name, XPos+barGap, NextValueY + Layout.windowHeight / 55) 
                 c++
@@ -556,7 +568,7 @@ let AnimateData = async function (DataObjects, FPS, Layout, Canvas, ctx, title) 
                     console.log(XPos)
                     XPos = XPos +CurrentFrameValues[c] * XPerUnit
                     ctx.fillStyle = "black"
-                    ctx.font = "5vh Arial"
+                    ctx.font = "5.5vmin Arial"
                     //writing dataobjects name and value
                     if(DataObjects[c].values[cc] !== 0){
                         ctx.fillText(scaleValue(DataObjects[c].values[cc]), XPos - CurrentFrameValues[c] * XPerUnit * 0.85, barStartY + Layout.windowHeight * 0.07 )
